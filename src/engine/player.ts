@@ -40,6 +40,10 @@ export class Player implements Entity {
     this.controllers[handedness] = null;
   }
 
+  getControllers() {
+    return this.controllers;
+  }
+
   update() {
     Object.values(this.controllers).forEach((controller) => {
       if (controller) {
