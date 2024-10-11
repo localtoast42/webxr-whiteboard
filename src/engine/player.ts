@@ -13,6 +13,11 @@ export class Player implements Entity {
 
   constructor(private engine: Engine) {
     this.instance = new THREE.Group();
+    this.controllers = {
+      left: null,
+      right: null,
+      none: null,
+    };
     this.initControllers();
   }
 
