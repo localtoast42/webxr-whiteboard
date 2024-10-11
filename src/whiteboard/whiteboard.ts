@@ -3,8 +3,11 @@ import { XRButton } from "three/addons/webxr/XRButton.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { Engine } from "../engine/engine";
 import { Experience } from "../engine/experience";
+import { Item } from "./item";
 
 export class Whiteboard implements Experience {
+  items: Item[] = [];
+
   constructor(private engine: Engine) {
     const environment = new RoomEnvironment();
     const pmremGenerator = new THREE.PMREMGenerator(
@@ -22,17 +25,35 @@ export class Whiteboard implements Experience {
   init() {
     const defaultMaterial = new THREE.MeshStandardMaterial({ color: "green" });
 
-    const icosahedron = new THREE.Mesh(
+    const icosahedron = new Item(
       new THREE.IcosahedronGeometry(0.5, 2),
       defaultMaterial
     );
 
-    icosahedron.position.set(1.0, 0.5, 0);
+    icosahedron.setPosition(1.0, 0.5, 0);
+    this.items.push(icosahedron);
 
-    this.engine.scene.add(icosahedron);
+    this.engine.scene.add(icosahedron.instance);
   }
 
   resize() {}
 
-  update() {}
+  update() {
+    const controllers = this.engine.player.getControllers();
+
+    if (controllers.right) {
+      const { gripSpace } = controllers.right;
+
+      this.items.forEach((item) => {
+        item.update();
+
+        item.checkHit(gripSpace.position);
+        if (item.isHit) {
+          item.updateMaterial(item.materials.hit);
+        } else {
+          item.updateMaterial(item.materials.default);
+        }
+      });
+    }
+  }
 }
