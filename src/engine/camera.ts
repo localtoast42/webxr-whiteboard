@@ -17,13 +17,14 @@ export class Camera implements Entity {
       50,
       window.innerWidth / window.innerHeight,
       0.1,
-      1000
+      100
     );
     this.instance.position.set(0, 1.6, 3);
   }
 
   private initControls() {
     this.controls = new OrbitControls(this.instance, this.engine.canvas);
+    this.controls.target.set(0, 1.6, 0);
     this.controls.update();
   }
 
