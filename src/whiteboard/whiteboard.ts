@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { XRButton } from "three/addons/webxr/XRButton.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { XR_BUTTONS } from "gamepad-wrapper";
 import { Engine } from "../engine/engine";
 import { Experience } from "../engine/experience";
 import { Item } from "./item";
@@ -42,14 +43,19 @@ export class Whiteboard implements Experience {
     const controllers = this.engine.player.getControllers();
 
     if (controllers.right) {
-      const { gripSpace } = controllers.right;
+      const { gripSpace, gamepad } = controllers.right;
+      const squeeze = gamepad.getButton(XR_BUTTONS.SQUEEZE);
 
       this.items.forEach((item) => {
         item.update();
 
-        item.checkHit(gripSpace.position);
-        if (item.isHit) {
-          item.updateMaterial(item.materials.hit);
+        if (squeeze) {
+          item.checkHit(gripSpace.position);
+          if (item.isHit) {
+            item.updateMaterial(item.materials.hit);
+          } else {
+            item.updateMaterial(item.materials.default);
+          }
         } else {
           item.updateMaterial(item.materials.default);
         }
