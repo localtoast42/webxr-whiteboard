@@ -11,7 +11,7 @@ export class Controller implements Entity {
   public readonly raySpace!: THREE.XRTargetRaySpace;
   public readonly gripSpace!: THREE.XRGripSpace;
   public readonly mesh!: XRControllerModel;
-  public readonly gamepad!: GamepadWrapper;
+  public gamepad!: GamepadWrapper;
 
   constructor(
     private player: Player,
@@ -31,6 +31,9 @@ export class Controller implements Entity {
     this.gripSpace.addEventListener("connected", (e) => {
       this.raySpace.visible = true;
       this.gripSpace.visible = true;
+      if (e.data.gamepad) {
+        this.gamepad = new GamepadWrapper(e.data.gamepad);
+      }
       this.player.addController(this, e.data.handedness);
     });
 
@@ -42,6 +45,6 @@ export class Controller implements Entity {
   }
 
   update() {
-    this.gamepad.update();
+    this.gamepad?.update();
   }
 }
