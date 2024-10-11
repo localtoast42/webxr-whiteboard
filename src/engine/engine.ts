@@ -46,6 +46,7 @@ export class Engine {
 
   update(delta: number) {
     this.camera.update();
+    this.player.update();
     this.renderEngine.update();
     this.experience.update(delta);
   }
