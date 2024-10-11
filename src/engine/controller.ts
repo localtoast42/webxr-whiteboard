@@ -10,8 +10,8 @@ import { Player } from "./player";
 export class Controller implements Entity {
   public readonly raySpace!: THREE.XRTargetRaySpace;
   public readonly gripSpace!: THREE.XRGripSpace;
-  private mesh!: XRControllerModel;
-  private gamepad!: GamepadWrapper;
+  public readonly mesh!: XRControllerModel;
+  public readonly gamepad!: GamepadWrapper;
 
   constructor(
     private player: Player,
