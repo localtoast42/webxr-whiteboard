@@ -5,6 +5,7 @@ export class Item implements Entity {
   public instance!: THREE.Group;
   public readonly mesh!: THREE.Mesh;
   public readonly boxHelper!: THREE.BoxHelper;
+  public bBox!: THREE.Box3;
   public materials!: {
     default: THREE.Material;
     hit: THREE.Material;
@@ -22,6 +23,7 @@ export class Item implements Entity {
     this.instance.add(this.mesh);
 
     this.boxHelper = new THREE.BoxHelper(this.mesh, 0x00ff00);
+    this.bBox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
     this.instance.add(this.boxHelper);
   }
 
@@ -34,7 +36,7 @@ export class Item implements Entity {
   }
 
   checkHit(position: THREE.Vector3) {
-    if (this.mesh.geometry.boundingBox?.containsPoint(position)) {
+    if (this.bBox.containsPoint(position)) {
       this.addHitStatus();
     }
   }
@@ -44,7 +46,7 @@ export class Item implements Entity {
   }
 
   update() {
-    this.mesh.geometry.computeBoundingBox();
+    this.bBox.setFromObject(this.mesh);
     this.isHit = false;
   }
 }
